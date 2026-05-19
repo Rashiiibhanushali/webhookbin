@@ -8,7 +8,10 @@ app.use(express.json());
 
 // Routes
 const binRoutes = require('./routes/bins');
+const webhookRoutes = require('./routes/webhook');
+
 app.use('/api/bins', binRoutes);
+app.use('/hook', webhookRoutes);       // ← new
 
 app.get('/', (req, res) => {
   res.json({ message: 'WebhookBin server is running' });
