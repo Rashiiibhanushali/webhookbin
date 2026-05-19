@@ -1,9 +1,10 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const WS_URL = 'ws://localhost:4000';
 
 export function useWebSocket(binId, onNewRequest) {
   const wsRef = useRef(null);
+  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
     if (!binId) return;
@@ -13,6 +14,7 @@ export function useWebSocket(binId, onNewRequest) {
 
     ws.onopen = () => {
       console.log('WS connected');
+      setIsConnected(true);
       ws.send(JSON.stringify({ type: 'subscribe', bin_id: binId }));
     };
 
@@ -25,11 +27,15 @@ export function useWebSocket(binId, onNewRequest) {
 
     ws.onerror = (err) => console.error('WS error:', err);
 
-    ws.onclose = () => console.log('WS disconnected');
+    ws.onclose = () => {
+      console.log('WS disconnected');
+      setIsConnected(false);
+    };
 
-    // Cleanup on unmount or binId change
     return () => {
       ws.close();
     };
   }, [binId]);
+
+  return { isConnected };
 }

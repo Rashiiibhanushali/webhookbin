@@ -1,10 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';  // ← add useEffect
 import { createBin } from '../api';
 
-export default function BinCreator({ onBinCreated }) {
+export default function BinCreator({ onBinCreated, binId }) {  // ← receive binId prop
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [webhookUrl, setWebhookUrl] = useState('');
+
+  // Reset when parent clears the bin
+  useEffect(() => {
+    if (!binId) {
+      setWebhookUrl('');
+      setCopied(false);
+    }
+  }, [binId]);  // ← whenever binId goes null, clear the URL
 
   async function handleCreate() {
     setLoading(true);
