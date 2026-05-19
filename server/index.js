@@ -6,6 +6,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Routes
+const binRoutes = require('./routes/bins');
+app.use('/api/bins', binRoutes);
+
 app.get('/', (req, res) => {
   res.json({ message: 'WebhookBin server is running' });
 });
