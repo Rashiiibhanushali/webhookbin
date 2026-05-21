@@ -1,5 +1,8 @@
 const express = require('express');
-const cors = require('cors');
+app.use(cors({
+  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  methods: ['GET', 'POST']
+}));
 const http = require('http');           // ← new
 require('dotenv').config();
 
