@@ -5,6 +5,7 @@ import RequestDetail from './components/RequestDetail';
 import LiveIndicator from './components/LiveIndicator';
 import { useWebSocket } from './hooks/useWebSocket';
 import { fetchBin } from './api';
+import { pingServer } from './api';
 
 export default function App() {
   const [binId, setBinId] = useState(null);
@@ -15,6 +16,11 @@ export default function App() {
     setRequests((prev) => [newRequest, ...prev]);
     setSelectedRequest((current) => current ?? newRequest);
   });
+  
+  // Ping server on app load to wake it up
+  useEffect(() => {
+    pingServer();
+  }, []);
 
   useEffect(() => {
     if (!binId) return;

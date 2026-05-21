@@ -1,4 +1,13 @@
-const BASE_URL = 'http://localhost:4000';
+const BASE_URL = import.meta.env.VITE_API_URL;
+
+// Warm up the server on app load
+export async function pingServer() {
+  try {
+    await fetch(`${BASE_URL}/`);
+  } catch (err) {
+    console.log('Server waking up...');
+  }
+}
 
 export async function createBin() {
   const res = await fetch(`${BASE_URL}/api/bins`, { method: 'POST' });
