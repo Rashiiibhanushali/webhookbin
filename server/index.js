@@ -1,15 +1,17 @@
 const express = require('express');
+const cors = require('cors');
+const http = require('http');
+require('dotenv').config();
+
+const { setupWebSocket } = require('./ws');
+
+const app = express();
+
 app.use(cors({
   origin: process.env.CLIENT_URL || 'http://localhost:5173',
   methods: ['GET', 'POST']
 }));
-const http = require('http');           // ← new
-require('dotenv').config();
 
-const { setupWebSocket } = require('./ws');  // ← new
-
-const app = express();
-app.use(cors());
 app.use(express.json());
 
 // Routes
@@ -23,11 +25,10 @@ app.get('/', (req, res) => {
   res.json({ message: 'WebhookBin server is running' });
 });
 
-// Create HTTP server and attach WebSocket to it
-const server = http.createServer(app);    // ← new
-setupWebSocket(server);                   // ← new
+const server = http.createServer(app);
+setupWebSocket(server);
 
 const PORT = process.env.PORT || 4000;
-server.listen(PORT, () => {              // ← changed app.listen to server.listen
+server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
